@@ -1,0 +1,48 @@
+# Your workflow name.
+name: Deploy to Railway
+
+# Run workflow on every push to the main branch.
+on:
+  push:
+    branches: [main]
+
+# Your workflow jobs.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Check-out your repository.
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Replace the existing deployment step with Railway deployment.
+      - name: Deploy to Railway
+        uses: gonuit/railway-docker-deploy@v1.3.3
+        with:
+          # The email address associated with your Railway account.
+          email: ${{ secrets.RAILWAY_EMAIL }}
+
+          # Railway API key associated with the provided user's email.
+          # API Key is available under your Railway account settings.
+          railway_api_key: ${{ secrets.RAILWAY_API_KEY }}
+
+          # Name of the Railway application to which the build is to be sent.
+          railway_app_name: ${{ secrets.RAILWAY_APP_NAME }}
+
+          # (Optional, default: "./")
+          # Dockerfile directory.
+          dockerfile_directory: ./
+
+          # (Optional, default: "Dockerfile")
+          # Dockerfile name.
+          dockerfile_name: Dockerfile
+
+          # (Optional, default: "")
+          # Additional options of the docker build command.
+          docker_options: "--no-cache"
+
+          # (Optional, default: "web")
+          # Select the process type for which you want the Docker container to be uploaded.
+          # By default, this argument is set to "web".
+          # For more information, look at https://docs.railway.app/#/deployment/container-setup?id=processes
+          process_type: web
